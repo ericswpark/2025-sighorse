@@ -1,3 +1,5 @@
+#show link: underline
+
 = The Great Events Site Migration
 
 In this paper-masquerading-as-a-research-paper-but-not-really-a-research-paper,
