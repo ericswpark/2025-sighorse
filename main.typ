@@ -35,9 +35,19 @@ been working on over the past two weeks, and lots of photos are taken for
 posterity. Once the event is over, one of the organizers upload a postmortem
 of the event, including all of the media taken during the event.
 
-Organizers would use Sanity to write the postmortem to events, but would often
-complain that Sanity was unreliable and it would lose uploaded image assets,
-forcing them to start over from scratch.
+The initial version of our events site was developed by Matthew Stanciu, our
+past president of Purdue Hackers. Events were managed on Airtable, before the
+migration over to Sanity in January of 2023 as Matthew wanted to use a real CMS
+to manage our events. For the RSVP functionality and emailing potential attendees,
+a GitHub Actions task ran that checked the RSVP email list hosted on Sanity and
+then sent out an email via a third-party service. We used Mailgun, before
+eventually switching over to Resend.
+
+This system worked well for quite some time, but it wasn't without outstanding
+faults. The initial signs of trouble were reported by our very own organizers,
+who would use Sanity to write the postmortem to events. They would often report
+that Sanity was unreliable, by losing uploaded image assets and forcing them to
+start over from scratch.
 
 Additionally, because Sanity hosted our events data, each user interaction would
 require the server to query Sanity for the associated event information. A round
