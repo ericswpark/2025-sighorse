@@ -66,6 +66,13 @@ about events in the codebase once, then serving the minified HTML to users.
 AstroJS had the promising feature of Content Collections that would allow us
 to achieve this goal, so this migration had been on our roadmap for a while.
 
+The final nail in the coffin came when Ray Arayilakath, our current president of
+Purdue Hackers, transitioned the RSVP functionality over to Luma. Thus, current
+and future events were solely managed on the new platform, and the RSVP functionality
+and associated code became redundant on our events site codebase. We decided to
+take this opportunity to rewrite the codebase from scratch and base it off of
+AstroJS.
+
 == First Steps
 
 On a separate branch,
