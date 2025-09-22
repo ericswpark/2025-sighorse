@@ -1,7 +1,17 @@
 {
   "api_url": "inherit",
   "api_key": "",
-  "dictionary": [],
+  "dictionary": [
+    "AstroJS",
+    "AstroJS-based",
+    "GROQ",
+    "Kartavya",
+    "Luma",
+    "NextJS-based",
+    "Resend",
+    "SIGHORSE",
+    "transpiler"
+  ],
   "language": "en-US",
   "rules": {
     "casing": true,

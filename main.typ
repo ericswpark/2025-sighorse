@@ -5,20 +5,20 @@
 In this paper-masquerading-as-a-research-paper-but-not-really-a-research-paper,
 I will discuss the process of migrating the Events site of Purdue Hackers from
 the antiquated NextJS-based codebase to a new AstroJS-based codebase. In the process,
-I'll also go over the process of integrating all of the event metadata and details
+I'll also go over the process of integrating all the event metadata and details
 from Sanity, which we used to keep track of historical events, into the site codebase
 itself using the Content Collections feature of AstroJS.
 
 == Definitions
 
-NextJS and AstroJS are two Javascript (JS) frameworks that developers can use to
+NextJS and AstroJS are two JavaScript (JS) frameworks that developers can use to
 build their webapps and websites. NextJS is primarily developed by the Vercel
 corporation, while AstroJS is built more by the community overall.
 
 Sanity is a Content Management System (CMS), which ensures that "content" --
 in our case, past event information and retrospectives -- all follow a specific
 format so that our frontend can easily convert the data coming over from Sanity
-into the final webpage that users can view. In addition, Sanity stores all of the
+into the final webpage that users can view. In addition, Sanity stores all the
 information in a database, along with the image assets associated with each event.
 
 Finally, TailwindCSS is a CSS framework that allows web developers and designers
@@ -30,14 +30,14 @@ expressed as class names, which is included in the HTML markup.
 
 Purdue Hackers hosts several events throughout the academic year, including Hack
 Night, where creatives come together to work on projects and socialize. At midnight,
-a Checkpoints ceremony is held, where people present their projects and what they've
+a Checkpoint ceremony is held, where people present their projects and what they've
 been working on over the past two weeks, and lots of photos are taken for
 posterity. Once the event is over, one of the organizers upload a postmortem
-of the event, including all of the media taken during the event.
+of the event, including all the media taken during the event.
 
 The initial version of our events site was developed by Matthew Stanciu, our
 past president of Purdue Hackers. Events were managed on Airtable, before the
-migration over to Sanity in January of 2023 as Matthew wanted to use a real CMS
+migration over to Sanity in January 2023 as Matthew wanted to use a real CMS
 to manage our events. For the RSVP functionality and emailing potential attendees,
 a GitHub Actions task ran that checked the RSVP email list hosted on Sanity and
 then sent out an email via a third-party service. We used Mailgun, before
@@ -49,7 +49,7 @@ who would use Sanity to write the postmortem to events. They would often report
 that Sanity was unreliable, by losing uploaded image assets and forcing them to
 start over from scratch.
 
-Additionally, because Sanity hosted our events data, each user interaction would
+Additionally, because Sanity hosted our event data, each user interaction would
 require the server to query Sanity for the associated event information. A round
 trip between the browser and server backend would occur, the server would make
 another round trip to Sanity's servers, and then the response would then get sent
@@ -112,14 +112,14 @@ The next stage was to preserve all of our old events and retrospectives. To achi
 this, I had to download the event metadata from Sanity. Sanity however, does not
 use REST for their API endpoints. Instead, they have
 #link("https://www.sanity.io/docs/content-lake/how-queries-work")[a custom query language named GROQ]
-that I had to learn, just to query all of the events that were stored in their
+that I had to learn, just to query all the events that were stored in their
 backend.
 
-But once the correct query was constructed, all of the metadata could be downloaded
+But once the correct query was constructed, all the metadata could be downloaded
 with a single request. However, this did not include any of the images that were
 uploaded with the retrospectives. To facilitate this,
 #link("https://github.com/purduehackers/events/tree/6e061709cc668f8c67cb586af6ede7211fce7b75/src/content")[several Python scripts were written]
-that handled the downloading, conversion, and renaming of all of the events and
+that handled the downloading, conversion, and renaming of all the events and
 images into the correct respective folders.
 
 This took several tries, mainly due to events with the same slug and names. In
@@ -137,7 +137,7 @@ collection of events that could be used to query past events.
 Overall, the migration of the event site was a success, and once the PR was merged,
 a build job on Vercel ran and transparently replaced the old instance of our
 NextJS site with our new AstroJS instance, with zero downtime for users. Nearly
-all of the functionality carried over, with
+all the functionality carried over, with
 #link("https://github.com/purduehackers/events/issues/97")[only a handful of minor bugs]
 that escaped the testing phase of the PR before merging.
 
@@ -171,8 +171,8 @@ storing events metadata on a database, which would allow us to design a clean,
 friendly administrative interface that organizers can use to submit event details.
 
 Another issue that cropped up was that, as it currently stands, our events site
-repository sits at nearly 2 GB of space used once cloned. This is due to all of
-the image assets that we include with each event retrospective. This wasn't an
+repository sits at nearly 2 GB of space used once cloned. This is due to all the
+image assets that we include with each event retrospective. This wasn't an
 issue on my personal website with only a handful of images per post, if they were
 included at all, but each of our events retrospectives can contain around 20 to
 50 images at once, which will not scale. This is another area we could improve in,
