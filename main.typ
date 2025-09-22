@@ -156,6 +156,34 @@ source is if we need to tweak the design, or migrate it like I've done here.
 And when you're doing either of those tasks, viewing both the styling and the
 markup is required, reducing the concern of combining the two.
 
+== Future Plans
+
+While the migration itself was successful, maintaining the site will continue until
+we no longer need it or migrate off to something new. We already have a couple of
+ideas planned for the rewritten events site, such as a whole new design that can
+only be tested on events as a sort of testing ground.
+
+After the migrated site launched, we received feedback that submitting new events
+and retrospectives through GitHub pull-requests add significant friction. This
+may come as ironic, given that I've just talked about the benefits that Astro's
+static content collections bring, but in the future, we may look into dynamically
+storing events metadata on a database, which would allow us to design a clean,
+friendly administrative interface that organizers can use to submit event details.
+
+Another issue that cropped up was that, as it currently stands, our events site
+repository sits at nearly 2 GB of space used once cloned. This is due to all of
+the image assets that we include with each event retrospective. This wasn't an
+issue on my personal website with only a handful of images per post, if they were
+included at all, but each of our events retrospectives can contain around 20 to
+50 images at once, which will not scale. This is another area we could improve in,
+and store images in a content delivery platform that's more suited for the task.
+
+All in all, the rewrite has given us a solid foundation to improve our events site
+and to try out new things before they are propagated to the rest of our infrastructure.
+
+
+== Acknowledgements
+
 Finally, many thanks to the various Purdue Hacker organizers and members for giving
 me feedback and words of encouragement during the migration phase, as well as bug
 reports that I didn't manage to catch pre- and post-deployment. I would also like
