@@ -11,17 +11,17 @@ itself using the Content Collections feature of AstroJS.
 
 == Definitions
 
-NextJS and AstroJS are two JavaScript (JS) frameworks that developers can use to
-build their webapps and websites. NextJS is primarily developed by the Vercel
+*NextJS* and *AstroJS* are two JavaScript (JS) frameworks that developers can use
+to build their webapps and websites. NextJS is primarily developed by the Vercel
 corporation, while AstroJS is built more by the community overall.
 
-Sanity is a Content Management System (CMS), which ensures that "content" --
+*Sanity* is a Content Management System (CMS), which ensures that "content" --
 in our case, past event information and retrospectives -- all follow a specific
 format so that our frontend can easily convert the data coming over from Sanity
 into the final webpage that users can view. In addition, Sanity stores all the
 information in a database, along with the image assets associated with each event.
 
-Finally, TailwindCSS is a CSS framework that allows web developers and designers
+Finally, *TailwindCSS* is a CSS framework that allows web developers and designers
 to easily style the frontend (the part that users view) without having to maintain
 a separate CSS file. This is achieved by having almost all CSS functionality
 expressed as class names, which is included in the HTML markup.
@@ -35,7 +35,7 @@ been working on over the past two weeks, and lots of photos are taken for
 posterity. Once the event is over, one of the organizers upload a postmortem
 of the event, including all the media taken during the event.
 
-The initial version of our events site was developed by Matthew Stanciu, our
+The initial version of our events site was developed by Matthew Stanciu, the
 past president of Purdue Hackers. Events were managed on Airtable, before the
 migration over to Sanity in January 2023 as Matthew wanted to use a real CMS
 to manage our events. For the RSVP functionality and emailing potential attendees,
@@ -43,11 +43,11 @@ a GitHub Actions task ran that checked the RSVP email list hosted on Sanity and
 then sent out an email via a third-party service. We used Mailgun, before
 eventually switching over to Resend.
 
-This system worked well for quite some time, but it wasn't without outstanding
-faults. The initial signs of trouble were reported by our very own organizers,
-who would use Sanity to write the postmortem to events. They would often report
-that Sanity was unreliable, by losing uploaded image assets and forcing them to
-start over from scratch.
+This system worked well for quite some time, but it wasn't without faults. The
+initial signs of trouble were reported by our very own organizers, who would use
+Sanity to write the postmortem to events. They would often report that Sanity
+was unreliable; it would lose uploaded image assets and force them to start over
+from scratch.
 
 Additionally, because Sanity hosted our event data, each user interaction would
 require the server to query Sanity for the associated event information. A round
@@ -57,16 +57,18 @@ over to the user. This increased the overall latency and responsiveness of the
 site, and required the backend to unnecessarily repeat the process of converting
 the data from Sanity into a list of events and the event detail page for the users.
 And as Sanity gave back the data in one giant payload, we had to use pagination
-to not cause undue strain on the overall infrastructure. Even the index page, where
+to not cause undue strain on the overall infrastructure. Even the index page, with
 minimal information of just the title and date/time of the event, fetched the
 entire event metadata from Sanity, wasting a lot of users' data.
 
-The solution was to statically generate the webpage by including all details
-about events in the codebase once, then serving the minified HTML to users.
-AstroJS had the promising feature of Content Collections that would allow us
-to achieve this goal, so this migration had been on our roadmap for a while.
+After a lenghty discussion on the engineering channel for Purdue Hackers, a solution
+was proposed: to statically generate the webpage, including all details about events
+in the codebase once, then serving the minified HTML to users. AstroJS had the
+promising feature of Content Collections that would allow us to achieve this goal,
+so it was our first pick out of the list of alternatives to consider for this
+migration, which had been on our roadmap for quite some time.
 
-The final nail in the coffin came when Ray Arayilakath, our current president of
+The final nail in the coffin came when Ray Arayilakath, the current president of
 Purdue Hackers, transitioned the RSVP functionality over to Luma. Thus, current
 and future events were solely managed on the new platform, and the RSVP functionality
 and associated code became redundant on our events site codebase. We decided to
@@ -75,17 +77,23 @@ AstroJS.
 
 == First Steps
 
-On a separate branch,
-#link("https://github.com/purduehackers/events/commit/97217e07426cf092e889a7102354bb3fe4e5edc0")[the first commit that wiped out our NextJS codebase] and 
-#link("https://github.com/purduehackers/events/commit/e0bd3b224ade828bb687d22a1abb8f733cae6af5")[set up a clean AstroJS template was created].
-This marked the start of the migration attempt.
+#let wipe_commit_url = "https://github.com/purduehackers/events/commit/97217e07426cf092e889a7102354bb3fe4e5edc0";
+#let astrojs_init_commit_url = "https://github.com/purduehackers/events/commit/e0bd3b224ade828bb687d22a1abb8f733cae6af5";
 
+On a separate branch,
+#link(wipe_commit_url)[the first commit that wiped out our NextJS codebase]
+#footnote[#link(wipe_commit_url)[#wipe_commit_url]] and
+#link(astrojs_init_commit_url)[set up a clean AstroJS template was created]
+#footnote[#link(astrojs_init_commit_url)[#astrojs_init_commit_url]]. This marked
+the start of the migration attempt.
+
+#let astro_tailwind_guide_url = "https://docs.astro.build/en/guides/styling/#tailwind";
 Before even looking into downloading and migrating the event metadata from Sanity,
 the initial structure of the events site was migrated by copying the HTML source
 from our NextJS codebase straight into the index page in our AstroJS codebase.
-After configuring #link("https://docs.astro.build/en/guides/styling/#tailwind")[the official TailwindCSS plugin],
-most of the styling displayed immediately
-with minor issues.
+After configuring #link(astro_tailwind_guide_url)[the official TailwindCSS plugin]
+#footnote[#link(astro_tailwind_guide_url)[#astro_tailwind_guide_url]],
+most of the styling displayed immediately with minor issues.
 
 #figure(
   image("images/tailwindcss-frontend-migration.png", width: 100%),
@@ -108,17 +116,23 @@ the original styling of the site.
 
 == Converting the events
 
+#let sanity_query_lang_url = "https://www.sanity.io/docs/content-lake/how-queries-work";
+
 The next stage was to preserve all of our old events and retrospectives. To achieve
 this, I had to download the event metadata from Sanity. Sanity however, does not
 use REST for their API endpoints. Instead, they have
-#link("https://www.sanity.io/docs/content-lake/how-queries-work")[a custom query language named GROQ]
+#link(sanity_query_lang_url)[a custom query language named GROQ]
+#footnote[#link(sanity_query_lang_url)[#sanity_query_lang_url]]
 that I had to learn, just to query all the events that were stored in their
 backend.
+
+#let temporary_python_migration_commit_url = "https://github.com/purduehackers/events/tree/6e061709cc668f8c67cb586af6ede7211fce7b75/src/content";
 
 But once the correct query was constructed, all the metadata could be downloaded
 with a single request. However, this did not include any of the images that were
 uploaded with the retrospectives. To facilitate this,
-#link("https://github.com/purduehackers/events/tree/6e061709cc668f8c67cb586af6ede7211fce7b75/src/content")[several Python scripts were written]
+#link(temporary_python_migration_commit_url)[several Python scripts were written]
+#footnote[#link(temporary_python_migration_commit_url)[#temporary_python_migration_commit_url]]
 that handled the downloading, conversion, and renaming of all the events and
 images into the correct respective folders.
 
@@ -126,19 +140,34 @@ This took several tries, mainly due to events with the same slug and names. In
 particular, Hack Nights without version identifiers or "beta" Hack Nights that
 were held confused the script and required modification.
 
+#let content_collection_config_url = "https://github.com/purduehackers/events/blob/main/src/content.config.ts";
+
 But once the events were organized into each event category and the version-named
 subfolder,
-#link("https://github.com/purduehackers/events/blob/main/src/content.config.ts")[a single Content Collection configuration file]
+#link(content_collection_config_url)[a single Content Collection configuration file]
+#footnote[#link(content_collection_config_url)[#content_collection_config_url]]
 was all that was needed for AstroJS to correctly parse the schema and create a
 collection of events that could be used to query past events.
 
+As mentioned earlier, AstroJS has a neat feature called "Content Collections"
+where you can define a schema in a configuration file. During compile time,
+Astro will look at this schema and determine all the files that fit within this
+schema with the glob pattern you have specified. If any files match the glob pattern
+but do not validate against the provided schema, a compile-time error is raised,
+making sure that all required data is accounted for in each event. This ensures
+consistency between all of our events metadata, while allowing us to track changes
+using Git commits.
+
 == Retrospective
+
+#let migration_bugs_url = "https://github.com/purduehackers/events/issues/97";
 
 Overall, the migration of the event site was a success, and once the PR was merged,
 a build job on Vercel ran and transparently replaced the old instance of our
 NextJS site with our new AstroJS instance, with zero downtime for users. Nearly
 all the functionality carried over, with
-#link("https://github.com/purduehackers/events/issues/97")[only a handful of minor bugs]
+#link(migration_bugs_url)[only a handful of minor bugs]
+#footnote[#link(migration_bugs_url)[#migration_bugs_url]]
 that escaped the testing phase of the PR before merging.
 
 Through this experience, I learned that intermediary scripts, like the Python
@@ -160,8 +189,11 @@ markup is required, reducing the concern of combining the two.
 
 While the migration itself was successful, maintaining the site will continue until
 we no longer need it or migrate off to something new. We already have a couple of
-ideas planned for the rewritten events site, such as a whole new design that can
-only be tested on events as a sort of testing ground.
+ideas planned for the rewritten events site, most notably a redesign that will
+allow us to test out ideas for our upcoming overall brand renewal. As the codebase
+has been cleaned up, testing out new changes should be comparatively easy as we
+no longer have to account for features that we no longer use, such as the RSVP
+capabilities of the old events site.
 
 After the migrated site launched, we received feedback that submitting new events
 and retrospectives through GitHub pull-requests add significant friction. This
@@ -172,11 +204,12 @@ friendly administrative interface that organizers can use to submit event detail
 
 Another issue that cropped up was that, as it currently stands, our events site
 repository sits at nearly 2 GB of space used once cloned. This is due to all the
-image assets that we include with each event retrospective. This wasn't an
-issue on my personal website with only a handful of images per post, if they were
-included at all, but each of our events retrospectives can contain around 20 to
-50 images at once, which will not scale. This is another area we could improve in,
-and store images in a content delivery platform that's more suited for the task.
+image assets that we include with each event retrospective. For comparison, my
+personal website which was also built atop AstroJS didn't run into this issue with
+only a handful of images per post, if any. On our events site, each of our events
+retrospectives can contain around 20 to 50 images at once, which will not scale
+due to asset size. This is another area we could improve in, by perhaps storing
+images in a platform that's more suitable for the task, such as a CDN.
 
 All in all, the rewrite has given us a solid foundation to improve our events site
 and to try out new things before they are propagated to the rest of our infrastructure.
