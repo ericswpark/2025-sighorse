@@ -69,11 +69,11 @@ so it was our first pick out of the list of alternatives to consider for this
 migration, which had been on our roadmap for quite some time.
 
 The final nail in the coffin came when Ray Arayilakath, the current president of
-Purdue Hackers, transitioned the RSVP functionality over to Luma. Thus, current
-and future events were solely managed on the new platform, and the RSVP functionality
-and associated code became redundant on our events site codebase. We decided to
-take this opportunity to rewrite the codebase from scratch and base it off of
-AstroJS.
+Purdue Hackers, transitioned the RSVP functionality over to Luma, a 3rd-party event
+and ticketing platform. Thus, current and future events were solely managed on
+this new platform, and the RSVP functionality and associated code became redundant
+on our events site codebase. We decided to take this opportunity to rewrite the
+codebase from scratch and base it off of AstroJS.
 
 == First Steps
 
