@@ -143,13 +143,21 @@ However, GROQ would require you to write:
 Even though plain SQL could probably do most if not all of what GROQ achieves,
 it was what Sanity used, so it was what I had to learn in order to progress with
 the migration. Fortunately, I did not have to filter my result, as the goal was
-to grab everything I could off of Sanity.
+to grab everything I could off of Sanity. Thus, most of my experimentations with
+the GROQ query came down to how Sanity defined `_type`s in their database.
+
+For events metadata, the `_type` was of `event`, which was straightforward enough.
+However, for images stored within the event retrospective metadata, Sanity had
+a special `_type` of `sanity.imageAsset`. Each event metadata entry would store
+a collection of image asset IDs, which I would have to correlate with the
+`sanity.imageAsset` entry and then download from Sanity's servers, by constructing
+the full URL from that `imageAsset` entry.
 
 #let temporary_python_migration_commit_url = "https://github.com/purduehackers/events/tree/6e061709cc668f8c67cb586af6ede7211fce7b75/src/content";
 
 Once the correct GROQ query was constructed, all the metadata could be downloaded
 with a single request. However, this did not include any of the images that were
-uploaded with the retrospectives. To facilitate this,
+uploaded with the retrospectives, as mentioned previously. To facilitate this,
 #link(temporary_python_migration_commit_url)[several Python scripts were written]
 #footnote[#link(temporary_python_migration_commit_url)[#temporary_python_migration_commit_url]]
 that handled the downloading, conversion, and renaming of all the events and
