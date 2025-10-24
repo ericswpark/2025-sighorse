@@ -126,19 +126,37 @@ use REST for their API endpoints. Instead, they have
 that I had to learn, just to query all the events that were stored in their
 backend.
 
+For comparison, a typical SQL statement to query for data would look something
+like this:
+
+```sql
+SELECT * FROM events
+WHERE date > 2020-03-24 AND date < 2025-01-01;
+```
+
+However, GROQ would require you to write:
+
+```
+*[_type == "event" && date > "2020-03-24" && date < "2025-01-01"]
+```
+
+Even though plain SQL could probably do most if not all of what GROQ achieves,
+it was what Sanity used, so it was what I had to learn in order to progress with
+the migration. Fortunately, I did not have to filter my result, as the goal was
+to grab everything I could off of Sanity.
+
 #let temporary_python_migration_commit_url = "https://github.com/purduehackers/events/tree/6e061709cc668f8c67cb586af6ede7211fce7b75/src/content";
 
-But once the correct query was constructed, all the metadata could be downloaded
+Once the correct GROQ query was constructed, all the metadata could be downloaded
 with a single request. However, this did not include any of the images that were
 uploaded with the retrospectives. To facilitate this,
 #link(temporary_python_migration_commit_url)[several Python scripts were written]
 #footnote[#link(temporary_python_migration_commit_url)[#temporary_python_migration_commit_url]]
 that handled the downloading, conversion, and renaming of all the events and
-images into the correct respective folders.
-
-This took several tries, mainly due to events with the same slug and names. In
-particular, Hack Nights without version identifiers or "beta" Hack Nights that
-were held confused the script and required modification.
+images into the correct respective folders. This took several tries, mainly due
+to events with the same slug and names. In particular, Hack Nights without version
+identifiers or "beta" Hack Nights that were held, confused the script and
+required modification.
 
 #let content_collection_config_url = "https://github.com/purduehackers/events/blob/main/src/content.config.ts";
 
